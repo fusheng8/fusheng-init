@@ -1,5 +1,7 @@
-package com.fusheng.init.model.dto.user;
+package com.fusheng.init.model.dto.sysUser;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,11 +12,12 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-public class AddUserDTO implements Serializable {
+public class AddSysUserDTO implements Serializable {
 
     /**
      * 用户账号
      */
+    @NotBlank(message = "用户账号不能为空")
     private String useraccount;
 
     /**
@@ -25,6 +28,8 @@ public class AddUserDTO implements Serializable {
     /**
     * 密码
     */
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6, max = 20, message = "密码长度为6-20位")
     private String password;
 
     /**

@@ -1,19 +1,19 @@
 package com.fusheng.init.model.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.*;
-import lombok.Builder;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
  * 用户表
  */
 @Data
-@TableName(value = "user")
-public class User implements Serializable {
+@TableName(value = "sys_user")
+public class SysUser {
     /**
     * 主键
     */
@@ -21,14 +21,14 @@ public class User implements Serializable {
     private Long id;
 
     /**
-     * 用户账号
-     */
-    private String useraccount;
-
-    /**
     * 头像
     */
     private String avatar;
+
+    /**
+    * 用户账号
+    */
+    private String username;
 
     /**
     * 密码
@@ -38,7 +38,7 @@ public class User implements Serializable {
     /**
     * 用户昵称
     */
-    private String username;
+    private String nickName;
 
     /**
     * 邮箱
@@ -61,20 +61,28 @@ public class User implements Serializable {
     private String userStatus;
 
     /**
-    * 更新时间
-    */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
-
-    /**
-    * 创建时间
-    */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    /**
     * 是否删除(0-未删, 1-已删)
     */
     @TableLogic
     private Byte isDeleted;
+
+    /**
+    * 更新时间
+    */
+    private Date updateTime;
+
+    /**
+    * 创建者
+    */
+    private Long createBy;
+
+    /**
+    * 创建时间
+    */
+    private Date createTime;
+
+    /**
+    * 更新者
+    */
+    private Long updateBy;
 }
