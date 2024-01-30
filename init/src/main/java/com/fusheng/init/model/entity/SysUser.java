@@ -58,7 +58,7 @@ public class SysUser {
     /**
     * 状态
     */
-    private String userStatus;
+    private int userStatus;
 
     /**
     * 是否删除(0-未删, 1-已删)

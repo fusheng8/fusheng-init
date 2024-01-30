@@ -3,6 +3,7 @@ package com.fusheng.init.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @TableName(value = "sys_role")
-public class SysRole {
+public class SysRole implements Serializable {
     @TableId(type = IdType.AUTO)
     /**
     * 角色ID
@@ -23,17 +24,12 @@ public class SysRole {
     private String name;
 
     /**
-    * 角色标识
-    */
-    private String type;
-
-    /**
     * 角色权限字符串
     */
-    private String key;
+    private String roleKey;
 
     /**
-    * 角色状态（0正常 1停用）
+    * 角色状态（1正常 0停用）
     */
     private Byte status;
 
