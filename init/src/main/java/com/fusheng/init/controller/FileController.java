@@ -1,6 +1,8 @@
 package com.fusheng.init.controller;
 
 
+import com.fusheng.init.common.BaseResponse;
+import com.fusheng.init.common.ErrorCode;
 import com.fusheng.init.utils.FileUploadUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileController {
     @PostMapping("/upload")
     @Operation(summary = "上传文件")
-    public String upload(MultipartFile file) {
-        return FileUploadUtil.uploadFile(file);
+    public BaseResponse<String> upload(MultipartFile file) {
+        if (file == null) return BaseResponse.error(ErrorCode.PARAMS_ERROR, "文件不能为空");
+        return BaseResponse.success(FileUploadUtil.uploadFile(file));
     }
 }
