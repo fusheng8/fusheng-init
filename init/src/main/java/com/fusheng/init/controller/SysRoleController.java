@@ -1,5 +1,6 @@
 package com.fusheng.init.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fusheng.init.common.BaseResponse;
 import com.fusheng.init.model.dto.sysRole.SysRolePageQueryDTO;
@@ -25,8 +26,8 @@ public class SysRoleController {
     @Resource
     private SysRoleService sysRoleService;
 
-    @Operation(summary = "登录")
-    @GetMapping("/list-all-role")
+    @Operation(summary = "获取所有角色")
+    @GetMapping("/getAllList")
     public BaseResponse<List<SysRole>> getAllRole() {
         return BaseResponse.success(sysRoleService.list());
     }
@@ -42,5 +43,6 @@ public class SysRoleController {
         vo.setPageSize(sysUserPage.getSize());
         return BaseResponse.success(vo);
     }
+
 
 }

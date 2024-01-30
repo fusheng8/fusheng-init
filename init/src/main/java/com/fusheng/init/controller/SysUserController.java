@@ -1,10 +1,15 @@
 package com.fusheng.init.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fusheng.init.common.BaseResponse;
+import com.fusheng.init.common.ErrorCode;
+import com.fusheng.init.exception.BusinessException;
+import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
+import com.fusheng.init.model.entity.SysRole;
 import com.fusheng.init.model.entity.SysUser;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.model.vo.sysUser.SysUserPageQueryVO;
@@ -64,5 +69,20 @@ public class SysUserController {
     public BaseResponse<Boolean> deleteByIds(@RequestParam List<Long> ids) {
         boolean res = sysUserService.removeBatchByIds(ids);
         return BaseResponse.success(res);
+    }
+
+    @Operation(summary = "根据用户id查找对应的角色id列表")
+    @GetMapping("/getRoleIdsByUserId")
+    public BaseResponse<String> getRoleIdsByUserId(@RequestParam Long userId) {
+        SysUser user = sysUserService.getById(userId);
+        if (user == null) throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        return BaseResponse.success(user.getRole());
+    }
+
+    @Operation(summary = "设置用户角色")
+    @PostMapping("/setUserRole")
+    public BaseResponse setUserRole(@RequestBody SetUserRoleDTO setUserRoleDTO) {
+        sysUserService.setUserRole(setUserRoleDTO);
+        return BaseResponse.success();
     }
 }

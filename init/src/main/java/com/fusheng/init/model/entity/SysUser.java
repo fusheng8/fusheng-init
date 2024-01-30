@@ -58,7 +58,7 @@ public class SysUser {
     /**
     * 状态
     */
-    private int userStatus;
+    private Byte userStatus;
 
     /**
     * 是否删除(0-未删, 1-已删)

@@ -7,14 +7,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fusheng.init.common.ErrorCode;
 import com.fusheng.init.exception.BusinessException;
 import com.fusheng.init.mapper.SysUserMapper;
+import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
 import com.fusheng.init.model.entity.SysUser;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.service.SysUserService;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,5 +76,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             record.setPassword(null);
         }
         return page;
+    }
+
+    @Override
+    public void setUserRole(SetUserRoleDTO setUserRoleDTO) {
+        SysUser sysUser = new SysUser();
+        sysUser.setId(setUserRoleDTO.getUserId());
+        sysUser.setRole(new Gson().toJson(setUserRoleDTO.getRoleIds()));
+        sysUserMapper.updateById(sysUser);
     }
 }
