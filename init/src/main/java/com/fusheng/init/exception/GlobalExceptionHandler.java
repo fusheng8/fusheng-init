@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(NotLoginException.class)
-    public BaseResponse<?> motLoginExceptionExceptionHandler(MethodArgumentNotValidException e) {
+    public BaseResponse<?> motLoginExceptionExceptionHandler(NotLoginException e) {
         return BaseResponse.error(ErrorCode.NOT_LOGIN_ERROR);
     }
 
