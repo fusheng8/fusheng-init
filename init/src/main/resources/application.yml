@@ -53,3 +53,7 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+
+fusheng:
+  # 加密秘钥
+  encrypt-key: 186cfa4cd57b

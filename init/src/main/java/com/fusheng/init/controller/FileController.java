@@ -1,6 +1,7 @@
 package com.fusheng.init.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.fusheng.init.common.BaseResponse;
 import com.fusheng.init.common.ErrorCode;
 import com.fusheng.init.utils.FileUploadUtil;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/file")
 @RestController
 @Tag(name = "文件操作")
+@SaCheckLogin
 public class FileController {
     @PostMapping("/upload")
     @Operation(summary = "上传文件")

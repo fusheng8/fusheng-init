@@ -1,6 +1,8 @@
 package com.fusheng.init.service.impl;
 
+import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,9 +16,12 @@ import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
 import com.fusheng.init.model.entity.SysUser;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.service.SysUserService;
-import com.google.gson.*;
+import com.fusheng.init.utils.PasswordUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,13 +45,25 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (sysUser == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        if (!sysUser.getPassword().equals(sysUserLoginDTO.getPassword())) {
+
+        //加密密码
+
+        String encryptPassword = PasswordUtil.encrypt(sysUserLoginDTO.getPassword());
+        if (!sysUser.getPassword().equals(encryptPassword)) {
             throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
         StpUtil.login(sysUser.getId());
 
+        List<String> roles = getRoleKeysByIds(sysUser.getRole());
+
+        SysUserLoginVO sysUserLoginVO = new SysUserLoginVO();
+        sysUserLoginVO.setRoles(roles);
+        sysUserLoginVO.setUsername(sysUser.getUsername());
+        return sysUserLoginVO;
+    }
+
+    public List<String> getRoleKeysByIds(String roleStr) {
         //将角色id列表转换为字符串
-        String roleStr = sysUser.getRole();
         List<Long> roleIds = new ArrayList<>();
         JsonParser.parseString(roleStr).getAsJsonArray().forEach(jsonElement -> {
             roleIds.add(jsonElement.getAsLong());
@@ -57,11 +74,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysRoleMapper.selectBatchIds(roleIds).forEach(sysRole -> {
             roles.add(sysRole.getRoleKey());
         });
-
-        SysUserLoginVO sysUserLoginVO = new SysUserLoginVO();
-        sysUserLoginVO.setRoles(roles);
-        sysUserLoginVO.setUsername(sysUser.getUsername());
-        return sysUserLoginVO;
+        return roles;
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
 import com.fusheng.init.model.entity.SysUser;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 
+import java.util.List;
+
 public interface SysUserService extends IService<SysUser> {
     /**
      * 登录用户
@@ -23,6 +25,14 @@ public interface SysUserService extends IService<SysUser> {
      * @return
      */
     Page<SysUser> pageQuery(SysUserPageQueryDTO sysUserPageQueryDTO);
+
+
+    /**
+     * 根据用户id列表查询角色名称列表
+     * @param roleStr
+     * @return
+     */
+    List<String> getRoleKeysByIds(String roleStr);
 
     /**
      * 设置用户角色
