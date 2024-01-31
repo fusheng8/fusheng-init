@@ -44,5 +44,18 @@ public class SysRoleController {
         return BaseResponse.success(vo);
     }
 
+    @Operation(summary = "保存角色")
+    @PostMapping("/save")
+    public BaseResponse<SysRole> save(@RequestBody SysRole sysRole) {
+        sysRoleService.saveOrUpdate(sysRole);
+        return BaseResponse.success(sysRole);
+    }
+
+    @Operation(summary = "根据id批量删除角色")
+    @GetMapping("/delete")
+    public BaseResponse<String> delete(@RequestParam("ids") List<Long> ids) {
+        sysRoleService.removeByIds(ids);
+        return BaseResponse.success("删除成功");
+    }
 
 }
