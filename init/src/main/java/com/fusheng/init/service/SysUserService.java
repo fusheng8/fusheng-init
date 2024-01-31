@@ -30,4 +30,12 @@ public interface SysUserService extends IService<SysUser> {
      * @param setUserRoleDTO
      */
     void setUserRole(SetUserRoleDTO setUserRoleDTO);
+
+    /***
+     * 根据id获取用户信息
+     *
+     * @param id
+     * @return
+     */
+    SysUser getUserInfoById(long id);
 }

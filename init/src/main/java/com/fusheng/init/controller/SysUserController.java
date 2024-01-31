@@ -14,12 +14,14 @@ import com.fusheng.init.model.entity.SysUser;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.model.vo.sysUser.SysUserPageQueryVO;
 import com.fusheng.init.service.SysUserService;
+import com.google.gson.JsonParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -40,8 +42,8 @@ public class SysUserController {
     @GetMapping("/info")
     public BaseResponse<SysUser> info() {
         long id = StpUtil.getLoginIdAsLong();
-        SysUser user = sysUserService.getById(id);
-        user.setPassword(null);
+        SysUser user = sysUserService.getUserInfoById(id);
+
         return BaseResponse.success(user);
     }
 

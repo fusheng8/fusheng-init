@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fusheng.init.common.ErrorCode;
 import com.fusheng.init.exception.BusinessException;
+import com.fusheng.init.mapper.SysRoleMapper;
 import com.fusheng.init.mapper.SysUserMapper;
 import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
@@ -13,11 +14,8 @@ import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
 import com.fusheng.init.model.entity.SysUser;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.service.SysUserService;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import jakarta.annotation.Resource;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
     @Resource
     private SysUserMapper sysUserMapper;
+    @Resource
+    private SysRoleMapper sysRoleMapper;
 
     @Override
     public SysUserLoginVO login(SysUserLoginDTO sysUserLoginDTO) {
@@ -44,11 +45,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         StpUtil.login(sysUser.getId());
 
-        List<JsonElement> list = JsonParser.parseString(sysUser.getRole()).getAsJsonArray().asList();
+        //将角色id列表转换为字符串
+        String roleStr = sysUser.getRole();
+        List<Long> roleIds = new ArrayList<>();
+        JsonParser.parseString(roleStr).getAsJsonArray().forEach(jsonElement -> {
+            roleIds.add(jsonElement.getAsLong());
+        });
+
+        //根据角色id列表查询角色名称列表
         List<String> roles = new ArrayList<>();
-        for (JsonElement jsonElement : list) {
-            roles.add(jsonElement.getAsString());
-        }
+        sysRoleMapper.selectBatchIds(roleIds).forEach(sysRole -> {
+            roles.add(sysRole.getRoleKey());
+        });
 
         SysUserLoginVO sysUserLoginVO = new SysUserLoginVO();
         sysUserLoginVO.setRoles(roles);
@@ -84,5 +92,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setId(setUserRoleDTO.getUserId());
         sysUser.setRole(new Gson().toJson(setUserRoleDTO.getRoleIds()));
         sysUserMapper.updateById(sysUser);
+    }
+
+    @Override
+    public SysUser getUserInfoById(long id) {
+        SysUser user = sysUserMapper.selectById(id);
+        //脱敏
+        user.setPassword(null);
+        return user;
     }
 }
