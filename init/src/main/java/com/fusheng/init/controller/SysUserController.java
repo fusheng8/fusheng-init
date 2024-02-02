@@ -11,16 +11,19 @@ import com.fusheng.init.exception.BusinessException;
 import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
+import com.fusheng.init.model.dto.sysUser.SysUserSaveDTO;
 import com.fusheng.init.model.entity.SysUser;
 import com.fusheng.init.model.vo.sysUser.SysUserInfoVO;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.model.vo.sysUser.SysUserPageQueryVO;
 import com.fusheng.init.service.SysUserService;
 import com.fusheng.init.utils.PasswordUtil;
+import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,19 +70,22 @@ public class SysUserController {
 
     @Operation(summary = "保存用户")
     @PostMapping("/save")
-    public BaseResponse<SysUser> save(@RequestBody SysUser sysUser) {
+    public BaseResponse<SysUser> save(@RequestBody SysUserSaveDTO sysUserSaveDTO) {
         //权限校验 非管理员只能修改自己的信息
         if (!StpUtil.hasRole("admin")&&
-                (sysUser.getId()!=null&&sysUser.getId() != StpUtil.getLoginIdAsLong())) {
+                (sysUserSaveDTO.getId()!=null&&sysUserSaveDTO.getId() != StpUtil.getLoginIdAsLong())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
-        if (StringUtils.isNoneEmpty(sysUser.getPassword())) {
+        SysUser user = new SysUser();
+        BeanUtils.copyProperties(sysUserSaveDTO, user);
+        if (StringUtils.isNoneEmpty(user.getPassword())) {
             //密码加密
-            String password = PasswordUtil.encrypt(sysUser.getPassword());
-            sysUser.setPassword(password);
+            String password = PasswordUtil.encrypt(user.getPassword());
+            user.setPassword(password);
         }
-        sysUserService.saveOrUpdate(sysUser);
-        return BaseResponse.success(sysUser);
+        user.setRoles(new Gson().toJson(sysUserSaveDTO.getRoles()));
+        sysUserService.saveOrUpdate(user);
+        return BaseResponse.success(user);
     }
 
     @SaCheckRole("admin")
