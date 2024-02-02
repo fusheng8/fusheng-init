@@ -12,6 +12,7 @@ import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
 import com.fusheng.init.model.entity.SysUser;
+import com.fusheng.init.model.vo.sysUser.SysUserInfoVO;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.service.SysUserService;
 import com.fusheng.init.utils.PasswordUtil;
@@ -19,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +74,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public Page<SysUser> pageQuery(SysUserPageQueryDTO sysUserPageQueryDTO) {
-        Page<SysUser> queryPage = new Page<>(sysUserPageQueryDTO.getCurrentPage(), sysUserPageQueryDTO.getPageSize());
+        Page<SysUser> queryPage = new Page<>(sysUserPageQueryDTO.getCurrent(), sysUserPageQueryDTO.getPageSize());
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(sysUserPageQueryDTO.getUsername())) {
             queryWrapper.like("username", sysUserPageQueryDTO.getUsername());
@@ -101,10 +103,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public SysUser getUserInfoById(long id) {
+    public SysUserInfoVO getUserInfoById(long id) {
         SysUser user = sysUserMapper.selectById(id);
+        SysUserInfoVO sysUserInfoVO = new SysUserInfoVO();
+        BeanUtils.copyProperties(user, sysUserInfoVO);
+
+        //转换角色id为角色key
+        List<String> roleKeys = getRoleKeysByIds(user.getRoles());
+        sysUserInfoVO.setRoles(roleKeys);
         //脱敏
-        user.setPassword(null);
-        return user;
+        sysUserInfoVO.setPassword(null);
+        return sysUserInfoVO;
     }
 }

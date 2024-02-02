@@ -12,6 +12,7 @@ import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
 import com.fusheng.init.model.entity.SysUser;
+import com.fusheng.init.model.vo.sysUser.SysUserInfoVO;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 import com.fusheng.init.model.vo.sysUser.SysUserPageQueryVO;
 import com.fusheng.init.service.SysUserService;
@@ -43,9 +44,9 @@ public class SysUserController {
 
     @Operation(summary = "获取用户信息")
     @GetMapping("/info")
-    public BaseResponse<SysUser> info() {
+    public BaseResponse<SysUserInfoVO> info() {
         long id = StpUtil.getLoginIdAsLong();
-        SysUser user = sysUserService.getUserInfoById(id);
+        SysUserInfoVO user = sysUserService.getUserInfoById(id);
 
         return BaseResponse.success(user);
     }
@@ -106,4 +107,12 @@ public class SysUserController {
         return BaseResponse.success();
     }
 
+    @Operation(summary = "获取该用户拥有的角色key")
+    @GetMapping("/getHasRoleKeys")
+    public BaseResponse<List<String>> getHasRoleKeys() {
+        long id = StpUtil.getLoginIdAsLong();
+        SysUser user = sysUserService.getById(id);
+        List<String> roleKeys = sysUserService.getRoleKeysByIds(user.getRoles());
+        return BaseResponse.success(roleKeys);
+    }
 }

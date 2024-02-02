@@ -18,7 +18,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     private SysRoleMapper sysRoleMapper;
     @Override
     public Page<SysRole> pageQuery(SysRolePageQueryDTO sysRolePageQueryDTO) {
-        Page<SysRole> queryPage = new Page<>(sysRolePageQueryDTO.getCurrentPage(), sysRolePageQueryDTO.getPageSize());
+        Page<SysRole> queryPage = new Page<>(sysRolePageQueryDTO.getCurrent(), sysRolePageQueryDTO.getPageSize());
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(sysRolePageQueryDTO.getName())) {
             queryWrapper.like("name", sysRolePageQueryDTO.getName());

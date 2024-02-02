@@ -6,6 +6,7 @@ import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
 import com.fusheng.init.model.entity.SysUser;
+import com.fusheng.init.model.vo.sysUser.SysUserInfoVO;
 import com.fusheng.init.model.vo.sysUser.SysUserLoginVO;
 
 import java.util.List;
@@ -47,5 +48,5 @@ public interface SysUserService extends IService<SysUser> {
      * @param id
      * @return
      */
-    SysUser getUserInfoById(long id);
+    SysUserInfoVO getUserInfoById(long id);
 }
