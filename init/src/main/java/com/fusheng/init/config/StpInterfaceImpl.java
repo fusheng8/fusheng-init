@@ -7,7 +7,6 @@ import com.fusheng.init.service.SysUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         SysUser roleIds = sysUserService.getUserInfoById(Long.parseLong(loginId.toString()));
-        return sysUserService.getRoleKeysByIds(roleIds.getRole());
+        return sysUserService.getRoleKeysByIds(roleIds.getRoles());
     }
 
 }

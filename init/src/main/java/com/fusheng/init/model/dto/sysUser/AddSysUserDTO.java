@@ -50,7 +50,7 @@ public class AddSysUserDTO implements Serializable {
     /**
     * 角色
     */
-    private String role;
+    private String roles;
 
     /**
     * 状态

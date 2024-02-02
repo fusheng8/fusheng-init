@@ -1,7 +1,6 @@
 package com.fusheng.init.model.entity;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
@@ -51,7 +50,7 @@ public class SysUser {
     /**
     * 角色
     */
-    private String role;
+    private String roles;
 
     /**
     * 状态

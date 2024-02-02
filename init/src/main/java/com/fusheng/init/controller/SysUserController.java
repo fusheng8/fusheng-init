@@ -3,15 +3,11 @@ package com.fusheng.init.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fusheng.init.common.BaseResponse;
 import com.fusheng.init.common.ErrorCode;
 import com.fusheng.init.exception.BusinessException;
-import com.fusheng.init.mapper.SysUserMapper;
 import com.fusheng.init.model.dto.sysUser.SetUserRoleDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserLoginDTO;
 import com.fusheng.init.model.dto.sysUser.SysUserPageQueryDTO;
@@ -24,11 +20,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -101,7 +95,7 @@ public class SysUserController {
     public BaseResponse<String> getRoleIdsByUserId(@RequestParam Long userId) {
         SysUser user = sysUserService.getById(userId);
         if (user == null) throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-        return BaseResponse.success(user.getRole());
+        return BaseResponse.success(user.getRoles());
     }
 
     @SaCheckRole("admin")
